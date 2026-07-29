@@ -750,6 +750,26 @@ describe('skills install/update: local universal bundle e2e', () => {
     rmSync(home, { recursive: true, force: true });
   });
 
+  test('labels the Pi harness by its current name', () => {
+    const tmp = mkdtempSync(join(tmpdir(), 'imp-test-pi-label-'));
+    const home = mkdtempSync(join(tmpdir(), 'imp-home-pi-label-'));
+    const lines = formatInstallDetectionLines(tmp, [{
+      provider: '.pi',
+      scope: 'user',
+      foundPath: join(home, '.pi'),
+      installRoot: home,
+      installPath: join(home, '.pi', 'agent', 'skills'),
+    }], home);
+
+    expect(lines).toEqual([
+      'Detected harnesses:',
+      '  Pi  ~/.pi',
+    ]);
+
+    rmSync(tmp, { recursive: true, force: true });
+    rmSync(home, { recursive: true, force: true });
+  });
+
   test('installs provider-specific skills into a fresh project', () => {
     const tmp = mkdtempSync(join(tmpdir(), 'imp-test-local-install-'));
     execSync('git init', { cwd: tmp });
